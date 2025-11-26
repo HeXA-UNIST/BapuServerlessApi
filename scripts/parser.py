@@ -28,13 +28,14 @@ class DailyMenu(BaseModel):
     menus: list[str] = Field(description="List of menu items for the day.")  # str -> list[str]로 변경
     calorie: int = Field(description="Total calories for the day's menu. If not available, set to 0.")
     time: str = Field(description="Meal time. One of breakfast, lunch, dinner.")
+    restaurant_name: str = Field(description="Name of the restaurant. One of 기숙사_식당_한식, 기숙사_식당_할랄, 학생_식당, 교직원_식당.")
 
 
 class WeeklyMenu(BaseModel):
     items: list[DailyMenu]
-    restaurant_name: str = Field(description="Name of the restaurant. One of 기숙사_식당_한식, 기숙사_식당_할랄, 학생_식당, 교직원_식당.")
     start_date: str = Field(description="Start date of the week. Format: MM-DD.")
     end_date: str = Field(description="End date of the week. Format: MM-DD.")
+    restaurant_name: str = Field(description="Name of the restaurant. One of 기숙사_식당, 학생_식당, 교직원_식당.")
 
 
 # 3. 클라이언트 초기화 (API 키 환경변수 연동 확인)
@@ -83,7 +84,6 @@ with open(final_path, "w", encoding="utf-8") as f:
         if daily_menu["calorie"] is None:
             daily_menu["calorie"] = 0
         daily_menu["date"] = f"{year}-{daily_menu['date']}"
-        daily_menu["restaurant_name"] = restaurant_name
         daily_menu["day"] = weekday_to_index[daily_menu["day"]]
         daily_menu["time"] = time_to_index[daily_menu["time"]]
         output_for_save.append(daily_menu)
