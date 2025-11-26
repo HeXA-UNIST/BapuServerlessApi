@@ -20,7 +20,7 @@ jobs:
           python-version: '3.9'
           
       - name: 필요 라이브러리 설치
-        run: pip install google-generativeai requests # requests 추가 (다운로드용)
+        run: pip install -r requirements.txt
         
       - name: 스크립트 실행
         env:
