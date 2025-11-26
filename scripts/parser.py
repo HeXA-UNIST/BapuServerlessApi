@@ -4,6 +4,7 @@ import requests
 import PIL.Image
 from io import BytesIO
 from pathlib import Path
+from datetime import datetime
 from pydantic import BaseModel, Field
 
 from google import genai
@@ -20,6 +21,7 @@ class DailyMenu(BaseModel):
     day: str = Field(description="Day of the week. One of Mon, Tue, Wed, Thu, Fri, Sat, Sun.")
     menus: list[str] = Field(description="List of menu items for the day.")  # str -> list[str]로 변경
     calorie: int = Field(description="Total calories for the day's menu. If not available, set to 0.")
+    time: str = Field(description="Meal time. One of breakfast, lunch, dinner.")
 
 
 class WeeklyMenu(BaseModel):
@@ -55,13 +57,18 @@ restaurant_name = parsed_result.restaurant_name
 start_date = parsed_result.start_date
 end_date = parsed_result.end_date
 
-save_file_name = Path(f"{restaurant_name}_{start_date}_to_{end_date}.json")
+year = datetime.now().year
+save_file_name = Path(f"{restaurant_name}_{year}-{start_date}_to_{year}-{end_date}.json")
 base_path = Path("menus")
+final_path = base_path / save_file_name
+
+assert final_path.exists(), f"File {final_path} already exists!"
+
 
 weekday_to_index = {"Mon": 1, "Tue": 2, "Wed": 3, "Thu": 4, "Fri": 5, "Sat": 6, "Sun": 7}
-
+time_to_index = {"breakfast": 1, "lunch": 2, "dinner": 3}
 # 저장할 때는 items 리스트만 깔끔하게 저장
-with open(base_path / save_file_name, "w", encoding="utf-8") as f:
+with open(final_path, "w", encoding="utf-8") as f:
     json_data = parsed_result.model_dump(mode="json")
 
     output_for_save = []
@@ -70,6 +77,7 @@ with open(base_path / save_file_name, "w", encoding="utf-8") as f:
             daily_menu["calorie"] = 0
         daily_menu["restaurant_name"] = restaurant_name
         daily_menu["day"] = weekday_to_index[daily_menu["day"]]
+        daily_menu["time"] = time_to_index[daily_menu["time"]]
         output_for_save.append(daily_menu)
     f.write(json.dumps(output_for_save, ensure_ascii=False, indent=2))
 
