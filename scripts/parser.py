@@ -62,7 +62,7 @@ save_file_name = Path(f"{restaurant_name}_{year}-{start_date}_to_{year}-{end_dat
 base_path = Path("menus")
 final_path = base_path / save_file_name
 
-assert final_path.exists(), f"File {final_path} already exists!"
+assert not final_path.exists(), f"File {final_path} already exists!"
 
 
 weekday_to_index = {"Mon": 1, "Tue": 2, "Wed": 3, "Thu": 4, "Fri": 5, "Sat": 6, "Sun": 7}
@@ -80,5 +80,6 @@ with open(final_path, "w", encoding="utf-8") as f:
         daily_menu["time"] = time_to_index[daily_menu["time"]]
         output_for_save.append(daily_menu)
     f.write(json.dumps(output_for_save, ensure_ascii=False, indent=2))
+
 
 print("Menu extraction successful!")
