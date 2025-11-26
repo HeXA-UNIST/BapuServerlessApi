@@ -19,7 +19,7 @@ class DailyMenu(BaseModel):
     date: str = Field(description="Date of the menu. Format: MM-DD.")
     day: str = Field(description="Day of the week. One of Mon, Tue, Wed, Thu, Fri, Sat, Sun.")
     menus: list[str] = Field(description="List of menu items for the day.")  # str -> list[str]로 변경
-    calories: int = Field(description="Total calories for the day's menu. If not available, set to 0.")
+    calorie: int = Field(description="Total calories for the day's menu. If not available, set to 0.")
 
 
 class WeeklyMenu(BaseModel):
@@ -66,8 +66,8 @@ with open(base_path / save_file_name, "w", encoding="utf-8") as f:
 
     output_for_save = []
     for daily_menu in json_data["items"]:
-        if daily_menu["calories"] is None:
-            daily_menu["calories"] = 0
+        if daily_menu["calorie"] is None:
+            daily_menu["calorie"] = 0
         daily_menu["restaurant_name"] = restaurant_name
         daily_menu["day"] = weekday_to_index[daily_menu["day"]]
         output_for_save.append(daily_menu)
