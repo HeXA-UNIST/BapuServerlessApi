@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 from google import genai
 
 
-GEMINI_MODEL_NAME = "gemini-3-pro-preview"
+GEMINI_MODEL_NAME = "gemini-2.5-pro"
 
 OCR_PROMPT = """이 식단표 이미지에서 요일별 메뉴를 JSON 형식으로 추출해줘.
 실속일품코너는 같이 날짜 menus에 포함시켜주고, 샐러드바는 무시해.
