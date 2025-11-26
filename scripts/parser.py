@@ -58,7 +58,7 @@ restaurant_name = parsed_result.restaurant_name
 start_date = parsed_result.start_date
 end_date = parsed_result.end_date
 
-save_file_name = Path(f"{restaurant_name}_{year}-{start_date}_to_{year}-{end_date}.json")
+save_file_name = Path(f"{restaurant_name}_{year}-{start_date}.json")
 base_path = Path("menus")
 final_path = base_path / save_file_name
 
