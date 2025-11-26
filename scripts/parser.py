@@ -52,12 +52,12 @@ response = client.models.generate_content(
 
 parsed_result = WeeklyMenu.model_validate_json(response.text)
 
+year = datetime.now().year
 
 restaurant_name = parsed_result.restaurant_name
 start_date = parsed_result.start_date
 end_date = parsed_result.end_date
 
-year = datetime.now().year
 save_file_name = Path(f"{restaurant_name}_{year}-{start_date}_to_{year}-{end_date}.json")
 base_path = Path("menus")
 final_path = base_path / save_file_name
@@ -75,6 +75,7 @@ with open(final_path, "w", encoding="utf-8") as f:
     for daily_menu in json_data["items"]:
         if daily_menu["calorie"] is None:
             daily_menu["calorie"] = 0
+        daily_menu["date"] = f"{year}-{daily_menu['date']}"
         daily_menu["restaurant_name"] = restaurant_name
         daily_menu["day"] = weekday_to_index[daily_menu["day"]]
         daily_menu["time"] = time_to_index[daily_menu["time"]]
