@@ -1,0 +1,38 @@
+name: Update Meal Menu (URL)
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_url:
+        description: '식단표 이미지 URL을 입력하세요'
+        required: true
+        type: string
+
+jobs:
+  parse-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: 파이썬 설정
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: 필요 라이브러리 설치
+        run: pip install google-generativeai requests # requests 추가 (다운로드용)
+        
+      - name: 스크립트 실행
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          IMAGE_URL: ${{ inputs.image_url }} # 입력받은 URL을 환경변수로 넘김
+        run: |
+          python scripts/parser.py
+          
+      - name: 결과 커밋 및 푸시
+        run: |
+          git config --global user.name "Menu Bot"
+          git config --global user.email "bot@noreply.github.com"
+          git add data/menu.json
+          git commit -m "Update menu from URL" || echo "No changes to commit"
+          git push
