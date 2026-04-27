@@ -1,0 +1,12 @@
+name: Flush backend menu cache
+
+on: push
+
+jobs:
+  flush-cache:
+    runs-on: ubuntu-slim
+    steps:
+      - name: Trigger cache flush
+        run: |
+          curl -f -w "\nHTTP Status: %{http_code}\n" \
+            "https://meal.hexa.pro/mainpage/flush?token=${{ secrets.FLUSH_SECRET }}"
